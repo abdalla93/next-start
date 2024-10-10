@@ -36,6 +36,34 @@
       "when": 1728380909364,
       "tag": "0004_chubby_black_bolt",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1728572797682,
+      "tag": "0005_numerous_red_wolf",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1728577444335,
+      "tag": "0006_brief_human_fly",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1728577662061,
+      "tag": "0007_sleepy_quasar",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1728578111920,
+      "tag": "0008_open_grim_reaper",
+      "breakpoints": true
     }
   ]
 }

@@ -81,7 +81,6 @@ export const variants = createTable(
     originalPrice: integer('original_price'),
     price: integer('price'),
     sku: varchar("sku", { length: 256 }),
-    
     imageId: integer("image_id").references(() => images.id),
     productId: integer("product_id").references(() => products.id),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -103,6 +102,45 @@ export const options = createTable(
     productId: integer("product_id").references(() => products.id),
   }
 )
+export const order = createTable(
+  "order",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    mobile: varchar("mobile", { length: 256 }),
+    address: varchar("address", { length: 256 }),
+    status: varchar('status', { enum: ["active", "done"] }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date()
+    ),
+  }
+)
+export const orderProduct = createTable(
+  "order_product",
+  {
+    orderId: integer("order_id").references(() => order.id),
+    productId: integer("product_id").references(() => products.id),
+    quantity: integer("quantity"),
+  }
+)
+export const orderProducts = createTable(
+  "order_product",
+  {
+    productId: integer("product_id").references(() => products.id),
+    orderId: integer("order_id").references(() => order.id),
+    quantity: integer("quantity"),
+  },
+  (orderProduct) => ({
+    orderProductIndex: index("product_variant_idx").on(orderProduct.productId, orderProduct.orderId),
+  })
+);
+export const orderProductsRelations = relations(orderProducts, ({ one }) => ({
+  product: one(products, { fields: [orderProducts.productId], references: [products.id] }),
+  order: one(variants, { fields: [orderProducts.orderId], references: [variants.id] }),
+}));
 export const tags = createTable(
   "tags",
   {
@@ -115,13 +153,17 @@ export const productsRelations = relations(products, ({ many }) => ({
   images: many(images),
   options: many(options),
   tags: many(tags),
+  orders: many(orderProducts),
+  variants: many(variants),
 }));
+
 export const imagesRelations = relations(images, ({ one,many }) => ({
   product: one(products, { fields: [images.productId], references: [products.id] }),
   variants: many(variants),
 }));
-export const variantsRelations = relations(variants, ({ one }) => ({
-  image: one(images, { fields: [variants.imageId], references: [images.id] })
+export const variantsRelations = relations(variants, ({ one,many }) => ({
+  product: one(products, { fields: [variants.productId], references: [products.id] }),
+  image: one(images, { fields: [variants.imageId], references: [images.id] }),
 }));
 export const optionsRelations = relations(options, ({ one }) => ({
   product: one(products, { fields: [options.productId], references: [products.id] }),
