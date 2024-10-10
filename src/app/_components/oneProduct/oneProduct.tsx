@@ -32,7 +32,7 @@ const OneProduct = ({product}: any) => {
                   <p className="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white">
                     {product?.variants?.[0]?.price} EGP
                   </p>
-                  <AddToCurt />
+                  <AddToCurt productId={product?.id} />
                 </div>
               </div>
             </div>
